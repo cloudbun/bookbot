@@ -1,34 +1,25 @@
+import sys
+from stats import count_words, create_char_dict, create_dictionary, print_char_freq
+
+def get_book_text(filepath):
+    with open(filepath) as file:
+        input = file.read()
+    return input
+
 def main():
-    book_path = "books/frankenstein.txt"
-    text = get_book_text(book_path)
-    num_words = get_num_words(text)
-    letter_dict = letter_count(text)
-    pretty_print(book_path, num_words, letter_dict)
-
-def get_num_words(text):
-    words = text.split()
-    return len(words)
-
-def get_book_text(path):
-    with open(path, 'r') as f:
-        return f.read()
-
-def letter_count(text):
-    chars = {}
-    for character in text:
-        lowered = character.lower()
-        if lowered in chars and lowered.isalpha():
-            chars[lowered] += 1
-        elif lowered.isalpha():
-            chars[lowered] = 1
-    return chars
-    
-def pretty_print(book_path, num_words, letter_dict):
-    print(f"--- Begin report of {book_path} ---")
-    print(f"{num_words} words found in the document\n")
-    for item in sorted(letter_dict.items(), reverse = True, key = lambda item: item[1]):
-        print(f"The '{item[0]}' character was found {item[1]} times.")
-    print("--- End report ---")
+    if len(sys.argv) != 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    else:
+        filepath = sys.argv[1]
+    text = get_book_text(filepath)
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {filepath}")
+    print("----------- Word Count ----------")
+    print(f'Found {count_words(text)} total words')
+    print("--------- Character Count -------")
+    print_char_freq(create_dictionary(create_char_dict(text)))
+    print("============= END ===============")
 
 if __name__ == "__main__":
     main()
